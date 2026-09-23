@@ -1,0 +1,15 @@
+# 専用インストーラ・再頒布制限バイナリはコミットしない
+CSP_*.exe
+WacomTablet_*.exe
+TourBoxConsoleSetup_*.zip
+*.exe
+*.dll
+*.zip
+*.msi
+
+# 実行時
+__pycache__/
+*.pyc
+*.log
+*.bak.*
+*.lock

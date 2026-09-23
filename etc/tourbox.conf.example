@@ -1,0 +1,71 @@
+# TourBox Lite 設定（Linux ネイティブドライバ）
+#
+#   ~/ClipStudio/bin/tourbox-daemon.py が読みます。
+#   変更後はデーモンに SIGHUP を送ると即反映されます:
+#     kill -HUP $(cat ~/ClipStudio/run/tourbox-daemon.pid)
+#
+# アクションの書式
+#   キー              z, Escape, F1, bracketleft, up ...
+#   修飾キー          ctrl, shift, alt, super を + で連結（例: ctrl+shift+z）
+#   ホイール          wheel:1 / wheel:-1 / hwheel:1 / hwheel:-1
+#   マウスボタン      btn:left / btn:middle / btn:right / btn:back / btn:forward
+#   長押し            hold:space （ボタンを離すまで押しっぱなし）
+#   単発              tap:alt    （押した瞬間に打ってすぐ離す）
+#   無効              none
+#
+# 修飾キーだけの割り当ては自動的に長押しになります。
+# ボタン名の一覧（TourBox Lite に無いものは無視されます）:
+#   side top tall short c1 c2 tour
+#   dpad_up dpad_down dpad_left dpad_right
+#   scroll_up scroll_down scroll_click
+#   knob_cw knob_ccw knob_click
+#   dial_cw dial_ccw dial_click
+#
+# 実際に付いているボタンと送出コードの確認:
+#   ~/opt/pyvenv/bin/python3 ~/ClipStudio/bin/tourbox-daemon.py --scan
+
+[device]
+# シリアルポート。auto なら USB ID cafe:* の CDC-ACM を自動検出します。
+port = auto
+baud = 115200
+vendor = cafe
+# product = 4001
+
+# 注入を許可するウィンドウの WM_CLASS（正規表現）。'*' で全ての X11 ウィンドウ。
+# Wayland ネイティブ描画のアプリには X11 経由の注入が届きません。
+target = ^clipstudiopaint\.exe$
+inject_any = false
+
+# 修飾キーと本体キーの間隔(ms)。組み合わせが効かない場合は 20〜50 に上げる。
+modifier_delay = 8
+# 単発キーの押下時間(ms)
+key_hold_ms = 30
+
+[profile:default]
+# --- CLIP STUDIO PAINT 既定ショートカット向け ---
+side = ctrl+z                # 元に戻す
+top = ctrl+shift+z           # やり直し
+tall = hold:alt              # 長押しでスポイト
+short = hold:space           # 長押しでキャンバス移動（手のひら）
+c1 = bracketleft             # ブラシサイズを小さく
+c2 = bracketright            # ブラシサイズを大きく
+tour = Escape                # 操作中のキャンセル
+
+# D パッド（あれば）
+dpad_up = up
+dpad_down = down
+dpad_left = left
+dpad_right = right
+
+# スクロールホイール = 画面スクロール、ノブ = Ctrl+ホイールで拡大縮小
+scroll_up = wheel:1
+scroll_down = wheel:-1
+scroll_click = none
+knob_cw = ctrl+wheel:1
+knob_ccw = ctrl+wheel:-1
+knob_click = none
+
+# ダイヤル（Lite には無い想定）
+dial_cw = hwheel:1
+dial_ccw = hwheel:-1
+dial_click = none
